@@ -13,6 +13,7 @@ public class SimulationScript : MonoBehaviour
     private DrawCirclesScript drawCirclesScript;
     public Camera mainCamera;
     private int previousParticle = 0;
+    private Vector2 boundaries;
 
 
     // Not meant to be seen

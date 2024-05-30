@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Fluid Simulation Shader.sln"
+    "dotnet.defaultSolution": "fluidSolver.sln"
 }
