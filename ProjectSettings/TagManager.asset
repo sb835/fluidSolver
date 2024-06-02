@@ -6,6 +6,7 @@ TagManager:
   tags:
   - DrawCircle
   - Simulation
+  - Grid
   layers:
   - Default
   - TransparentFX

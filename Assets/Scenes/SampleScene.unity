@@ -119,6 +119,53 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &155552755
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 155552757}
+  - component: {fileID: 155552756}
+  m_Layer: 0
+  m_Name: Grid
+  m_TagString: Grid
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &155552756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155552755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c8fa63d15bf2754ebc9eb7a3f4cc660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 40
+  height: 30
+  cellSize: 0.4
+--- !u!4 &155552757
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155552755}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,7 +252,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 8.91, y: 5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -255,13 +302,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a203c09590dec284182af22b89f8d867, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentParticle: 0
-  currentParticlePosition: {x: 0, y: 0}
+  runSimulation: 1
   positions: []
+  velocitys: []
   colors: []
   numParticles: 0
   particleSize: 0
+  particleMass: 0
+  particleSpacing: 0
+  particleVolume: 0
+  startDensity: 1.5
+  texResolution: 2048
   mainCamera: {fileID: 519420031}
+  gravity: 1
+  damping: 0.5
+  currentParticle: 0
+  currentParticlePosition: {x: 0, y: 0}
+  currentParticleVelocity: {x: 0, y: 0}
+  currentGridCell: {x: 0, y: 0}
+  contentCurrentGridCell: 
 --- !u!1 &598455287
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,6 +365,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44ddcdd5cee7f6a43920ea3155a68ea6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  particle: 0
+  particlePosition: {x: 0, y: 0}
+  particleVelocity: {x: 0, y: 0}
+  gridCell: {x: 0, y: 0}
+  gridCellIndex: 0
+  gridCellContent: 
+  neighbors: 
+  kernel: 0
+  neighbor: 0
+  oldPos: 0
+  kernelSum: 0
 --- !u!1 &1984741414
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,7 +495,7 @@ Transform:
   m_GameObject: {fileID: 1984741414}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.11, y: 5, z: 0}
+  m_LocalPosition: {x: 10, y: 10, z: 0}
   m_LocalScale: {x: 20, y: 20, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -439,3 +509,4 @@ SceneRoots:
   - {fileID: 521666328}
   - {fileID: 1984741419}
   - {fileID: 598455288}
+  - {fileID: 155552757}
