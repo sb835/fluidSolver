@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c8fa63d15bf2754ebc9eb7a3f4cc660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 40
+  width: 45
   height: 30
   cellSize: 0.4
 --- !u!4 &155552757
@@ -302,11 +302,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a203c09590dec284182af22b89f8d867, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runSimulation: 1
+  runSimulation: 0
+  colorParticles: 0
+  speedColor: 4
   positions: []
   velocitys: []
   colors: []
+  densitys: []
+  pressures: []
+  forces: []
+  predictedPositions: []
+  boundaryPositions: []
+  boundaryColors: []
+  maxVelocity: {x: 0, y: 0}
+  timeStepMultiplyer: 0.9
+  timeStep: 0
+  stiffness: 100
   numParticles: 0
+  numBoundaries: 0
   particleSize: 0
   particleMass: 0
   particleSpacing: 0
@@ -314,8 +327,7 @@ MonoBehaviour:
   startDensity: 1.5
   texResolution: 2048
   mainCamera: {fileID: 519420031}
-  gravity: 1
-  damping: 0.5
+  gravity: -2
   currentParticle: 0
   currentParticlePosition: {x: 0, y: 0}
   currentParticleVelocity: {x: 0, y: 0}
@@ -369,13 +381,18 @@ MonoBehaviour:
   particlePosition: {x: 0, y: 0}
   particleVelocity: {x: 0, y: 0}
   gridCell: {x: 0, y: 0}
-  gridCellIndex: 0
   gridCellContent: 
   neighbors: 
+  boundaryNeighbors: 
   kernel: 0
+  kernelGradient: {x: 0, y: 0}
+  kernelGradientSum: {x: 0, y: 0}
   neighbor: 0
   oldPos: 0
   kernelSum: 0
+  density: 0
+  pressure: 0
+  force: {x: 0, y: 0}
 --- !u!1 &1984741414
 GameObject:
   m_ObjectHideFlags: 0
