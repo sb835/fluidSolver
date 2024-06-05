@@ -81,7 +81,7 @@ public class DrawCirclesScript : MonoBehaviour
     {
     }
 
-    private void OnDestroy()
+    public void OnDestroy()
     {
         buffer.Dispose();
     }

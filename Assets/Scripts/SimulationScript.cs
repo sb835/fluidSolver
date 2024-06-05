@@ -7,6 +7,7 @@ public class SimulationScript : MonoBehaviour
 {
     public bool runSimulation = true;
     public bool colorParticles = false;
+    public int tests = 1;
     public float speedColor = 4.0f;
     public Vector2[] positions;
     public Vector2[] velocitys;
@@ -21,7 +22,7 @@ public class SimulationScript : MonoBehaviour
     public Vector2[] predictedVelocitys;
     public Vector2[] boundaryPositions;
     public Color[] boundaryColors;
-    public Vector2 maxVelocity;
+    public Vector2 maxVelocity = new Vector2(2, 9);
     public float timeStepMultiplyer = 0.9f;
     public float timeStep;
     public float stiffness = 100.0f;
@@ -72,7 +73,15 @@ public class SimulationScript : MonoBehaviour
         boundaries = new Vector2(16, 9);
         // InitializeParticles(1800);
         // spawnInEveryCell(3, 3, 25, 18);
-        spawnSquareParticles(new Vector2(3, 3), 50, 25, particleSpacing / 4);
+        if (tests == 1)
+        {
+            spawnSquareParticles(new Vector2(2, 3), 60, 25, particleSpacing / 4);
+        }
+        else if (tests == 2)
+        {
+            spawnSquareParticles(new Vector2(2, 2), 70, 40, particleSpacing / 12);
+            gravity = 0;
+        }
 
         // Update grid
         spatialGrid.emptyGrid();
@@ -178,6 +187,7 @@ public class SimulationScript : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+
     {
         // Update particle size
         particleMass = startDensity * particleVolume;
@@ -208,21 +218,33 @@ public class SimulationScript : MonoBehaviour
             }
         }
 
+        // Start Stop Simulation
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            runSimulation = !runSimulation;
+        }
+
+        // Restart
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            Start();
+            runSimulation = false;
+        }
 
         // Mouse input
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetMouseButton(0))
         {
             ReturnMouse();
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetKey(KeyCode.S))
         {
             Vector3 screenPosition = Input.mousePosition;
             screenPosition.z = Camera.main.nearClipPlane + 1;
             mouseForceOut(Camera.main.ScreenToWorldPoint(screenPosition), 2f, 1.5f);
         }
 
-        if (Input.GetMouseButton(1))
+        if (Input.GetKey(KeyCode.D))
         {
             Vector3 screenPosition = Input.mousePosition;
             screenPosition.z = Camera.main.nearClipPlane + 1;
@@ -232,7 +254,7 @@ public class SimulationScript : MonoBehaviour
         // Check for max velocity
         for (int i = 0; i < numParticles; i++)
         {
-            if (velocitys[i].magnitude > maxVelocity.magnitude && velocitys[i].y > -15)
+            if (velocitys[i].magnitude > maxVelocity.magnitude && velocitys[i].y > -15 && velocitys[i].magnitude > 0)
             {
                 maxVelocity = velocitys[i];
             }
@@ -257,9 +279,8 @@ public class SimulationScript : MonoBehaviour
         }
 
         DrawParticles();
+
     }
-
-
     void SimulationStep(float deltaTime)
     {
 

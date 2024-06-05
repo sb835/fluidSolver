@@ -304,6 +304,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runSimulation: 0
   colorParticles: 0
+  tests: 1
   speedColor: 4
   positions: []
   velocitys: []
@@ -311,13 +312,15 @@ MonoBehaviour:
   densitys: []
   pressures: []
   forces: []
+  nPForces: []
   predictedPositions: []
+  predictedVelocitys: []
   boundaryPositions: []
   boundaryColors: []
   maxVelocity: {x: 0, y: 0}
   timeStepMultiplyer: 0.9
   timeStep: 0
-  stiffness: 100
+  stiffness: 50
   numParticles: 0
   numBoundaries: 0
   particleSize: 0
