@@ -16,7 +16,9 @@ public class SimulationScript : MonoBehaviour
     public float[] densitys;
     public float[] pressures;
     public Vector2[] forces;
+    public Vector2[] nPForces;
     public Vector2[] predictedPositions;
+    public Vector2[] predictedVelocitys;
     public Vector2[] boundaryPositions;
     public Color[] boundaryColors;
     public Vector2 maxVelocity;
@@ -177,6 +179,36 @@ public class SimulationScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Update particle size
+        particleMass = startDensity * particleVolume;
+        particleSize = particleMass;
+
+        // clear the grid
+        spatialGrid.emptyGrid();
+
+        // Add the number of each particle in the respective grid cell
+        for (int i = 0; i < numParticles; i++)
+        {
+            Vector2 gridCoords = spatialGrid.computeCellPosition(predictedPositions[i]);
+            if (spatialGrid.isValidCell(gridCoords))
+            {
+                spatialGrid.grid[(int)gridCoords.x, (int)gridCoords.y].Add(i);
+            }
+        }
+
+        // Add the number of each boundary particle in a gird cell
+        // We distinguish the boundary particle from regular particles
+        // by adding numParticles to their particle index
+        for (int i = 0; i < numBoundaries; i++)
+        {
+            Vector2 gridCoords = spatialGrid.computeCellPosition(boundaryPositions[i]);
+            if (spatialGrid.isValidCell(gridCoords))
+            {
+                spatialGrid.grid[(int)gridCoords.x, (int)gridCoords.y].Add(i + numParticles);
+            }
+        }
+
+
         // Mouse input
         if (Input.GetKeyDown(KeyCode.S))
         {
@@ -206,6 +238,17 @@ public class SimulationScript : MonoBehaviour
             }
         }
 
+        // Change color according to velocity
+        if (colorParticles)
+        {
+            for (int i = 0; i < numParticles; i++)
+            {
+                float speed = velocitys[i].magnitude / speedColor;
+                // float speed = 1.15f;
+                colors[i] = Color.Lerp(Color.blue, Color.red, speed);
+            }
+        }
+
         if (runSimulation)
         {
             // Calculate time step
@@ -219,45 +262,24 @@ public class SimulationScript : MonoBehaviour
 
     void SimulationStep(float deltaTime)
     {
-        // Update particle size
-        particleMass = startDensity * particleVolume;
-        particleSize = particleMass;
-
-        // clear the grid
-        spatialGrid.emptyGrid();
-
-        // Predict next positions
-        for (int i = 0; i < numParticles; i++)
-        {
-            predictedPositions[i] = positions[i] + velocitys[i] * deltaTime;
-        }
-
-        // Add the number of each particle in the respective grid cell
-        for (int i = 0; i < numParticles; i++)
-        {
-            Vector2 gridCoords = spatialGrid.computeCellPosition(predictedPositions[i]);
-            if (spatialGrid.isValidCell(gridCoords))
-            {
-                spatialGrid.grid[(int)gridCoords.x, (int)gridCoords.y].Add(i);
-            }
-        }
-
-        // Add the number of each boundary particle in a gird cell
-        // We distinguish the boundary particle from regular particles
-        // by adding numParticles to their particle index
-        for (int i = 0; i < numBoundaries; i++)
-        {
-            Vector2 gridCoords = spatialGrid.computeCellPosition(boundaryPositions[i]);
-            if (spatialGrid.isValidCell(gridCoords))
-            {
-                spatialGrid.grid[(int)gridCoords.x, (int)gridCoords.y].Add(i + numParticles);
-            }
-        }
 
         // Find all neighbors for each particle
         for (int i = 0; i < numParticles; i++)
         {
             findNeighbors(i);
+        }
+
+        // Compute non-pressure accelerations
+        for (int i = 0; i < numParticles; i++)
+        {
+            nPForces[i] = new Vector2(0, gravity);
+        }
+
+        // Predict next positions
+        for (int i = 0; i < numParticles; i++)
+        {
+            predictedVelocitys[i] = velocitys[i] + nPForces[i] * deltaTime;
+            predictedPositions[i] = positions[i] + predictedVelocitys[i] * deltaTime;
         }
 
         // Compute densitys
@@ -278,25 +300,31 @@ public class SimulationScript : MonoBehaviour
             computePressureAcceleration(i);
         }
 
-        // Change color according to velocity
-        if (colorParticles)
-        {
-            for (int i = 0; i < numParticles; i++)
-            {
-                float speed = velocitys[i].magnitude / speedColor;
-                // float speed = 1.15f;
-                colors[i] = Color.Lerp(Color.blue, Color.red, speed);
-            }
-        }
-
         // Update particle
         for (int i = 0; i < numParticles; i++)
         {
-            Vector2 acceleration = forces[i] + new Vector2(0, gravity);
+            Vector2 acceleration = forces[i];
             MoveParticles(acceleration, i, deltaTime);
-            // containParticles(i);
         }
 
+    }
+
+    //Move particles downwards
+    private void MoveParticles(Vector2 acceleration, int particle, float deltaTime)
+    {
+        velocitys[particle] = predictedVelocitys[particle] + acceleration * deltaTime;
+        positions[particle] = positions[particle] + velocitys[particle] * deltaTime;
+    }
+
+    // Draw all Particles at Position with their respective color
+    private void DrawParticles()
+    {
+        Vector2[] particlePositions = positions.Concat(boundaryPositions).ToArray();
+
+        Color[] particleColors = colors.Concat(boundaryColors).ToArray();
+
+        drawCirclesScript.DrawCirclesAtPositions(convertPositions(particlePositions), particleColors, particleSize * 102.4f);
+        drawCirclesScript.DispatchKernel(Mathf.Max(particlePositions.Length / 16, 1));
     }
 
     // Convert positions to texCoords
@@ -341,7 +369,9 @@ public class SimulationScript : MonoBehaviour
         densitys[particleNum] = 0.0f;
         pressures[particleNum] = 0.0f;
         forces[particleNum] = new Vector2(0, 0);
+        nPForces[particleNum] = new Vector2(0, 0);
         predictedPositions[particleNum] = new Vector2(0, 0);
+        predictedVelocitys[particleNum] = new Vector2(0, 0);
     }
     // Initialize Particles
     private void InitializeParticles(int num)
@@ -355,7 +385,9 @@ public class SimulationScript : MonoBehaviour
         densitys = new float[num];
         pressures = new float[num];
         forces = new Vector2[num];
+        nPForces = new Vector2[num];
         predictedPositions = new Vector2[num];
+        predictedVelocitys = new Vector2[num];
         for (int i = 0; i < num; i++)
         {
             InitParticle(i, new Vector2(Random.Range(start.x + 1, boundaries.x - 1), Random.Range(start.y + 1, boundaries.y - 1)),
@@ -376,7 +408,9 @@ public class SimulationScript : MonoBehaviour
         densitys = new float[num];
         pressures = new float[num];
         forces = new Vector2[num];
+        nPForces = new Vector2[num];
         predictedPositions = new Vector2[num];
+        predictedVelocitys = new Vector2[num];
         int counter = 0;
         for (float x = origin.x; x < origin.x + (width) * 2 * (particleSize + particleSpace); x += 2 * (particleSize + particleSpace))
         {
@@ -412,24 +446,6 @@ public class SimulationScript : MonoBehaviour
                 previousParticle = i;
             }
         }
-    }
-
-    //Move particles downwards
-    private void MoveParticles(Vector2 acceleration, int particle, float deltaTime)
-    {
-        velocitys[particle] += acceleration * deltaTime;
-        positions[particle] += velocitys[particle] * deltaTime;
-    }
-
-    // Draw all Particles at Position with their respective color
-    private void DrawParticles()
-    {
-        Vector2[] particlePositions = positions.Concat(boundaryPositions).ToArray();
-
-        Color[] particleColors = colors.Concat(boundaryColors).ToArray();
-
-        drawCirclesScript.DrawCirclesAtPositions(convertPositions(particlePositions), particleColors, particleSize * 102.4f);
-        drawCirclesScript.DispatchKernel(Mathf.Max(particlePositions.Length / 16, 1));
     }
 
     // Neighbor search
