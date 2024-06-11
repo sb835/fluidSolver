@@ -148,9 +148,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c8fa63d15bf2754ebc9eb7a3f4cc660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 45
-  height: 30
-  cellSize: 0.4
+  width: 40
+  height: 20
+  cellSize: 0.5
 --- !u!4 &155552757
 Transform:
   m_ObjectHideFlags: 0
@@ -302,10 +302,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a203c09590dec284182af22b89f8d867, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runSimulation: 0
+  moveParticles: 0
   colorParticles: 0
+  withSplitting: 1
   tests: 1
+  amountParticles: {x: 1, y: 1}
+  particlePosition: {x: 8, y: 4}
+  particleStartSpacing: 0.17
   speedColor: 4
+  alpha: 1.817348
   positions: []
   velocitys: []
   colors: []
@@ -320,7 +325,7 @@ MonoBehaviour:
   maxVelocity: {x: 0, y: 0}
   timeStepMultiplyer: 0.9
   timeStep: 0
-  stiffness: 50
+  stiffness: 80
   numParticles: 0
   numBoundaries: 0
   particleSize: 0
@@ -329,13 +334,11 @@ MonoBehaviour:
   particleVolume: 0
   startDensity: 1.5
   texResolution: 2048
+  kernelSupportRadius: 0
   mainCamera: {fileID: 519420031}
-  gravity: -2
+  gravity: 0
   currentParticle: 0
-  currentParticlePosition: {x: 0, y: 0}
-  currentParticleVelocity: {x: 0, y: 0}
   currentGridCell: {x: 0, y: 0}
-  contentCurrentGridCell: 
 --- !u!1 &598455287
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,22 +383,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44ddcdd5cee7f6a43920ea3155a68ea6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colorDensitys: 0
+  alpha: 1.8173475
+  addAlpha: 0
   particle: 0
+  gridCell: {x: 0, y: 0}
   particlePosition: {x: 0, y: 0}
   particleVelocity: {x: 0, y: 0}
-  gridCell: {x: 0, y: 0}
-  gridCellContent: 
-  neighbors: 
-  boundaryNeighbors: 
+  neighbor: 0
   kernel: 0
   kernelGradient: {x: 0, y: 0}
-  kernelGradientSum: {x: 0, y: 0}
-  neighbor: 0
-  oldPos: 0
   kernelSum: 0
+  kernelDerivativeSum: {x: 0, y: 0}
   density: 0
   pressure: 0
-  force: {x: 0, y: 0}
+  numPerfectDensitys: 0
+  numPerfectPressure: 0
 --- !u!1 &1984741414
 GameObject:
   m_ObjectHideFlags: 0
