@@ -1,10 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SimulationScript : MonoBehaviour
 {
@@ -17,19 +14,19 @@ public class SimulationScript : MonoBehaviour
     public float particleStartSpacing;
     public float speedColor = 4.0f;
     public float alpha;
-    public List<Vector2> positions;
-    public List<Vector2> velocitys;
-    public List<Color> colors;
+    public Vector2[] positions;
+    public Vector2[] velocitys;
+    public Color[] colors;
     public List<int>[] neighbors;
     public List<int>[] boundaryNeighbors;
-    public List<float> densitys;
-    public List<float> pressures;
-    public List<Vector2> forces;
-    public List<Vector2> nPForces;
-    public List<Vector2> predictedPositions;
-    public List<Vector2> predictedVelocitys;
-    public List<Vector2> boundaryPositions;
-    public List<Color> boundaryColors;
+    public float[] densitys;
+    public float[] pressures;
+    public Vector2[] forces;
+    public Vector2[] nPForces;
+    public Vector2[] predictedPositions;
+    public Vector2[] predictedVelocitys;
+    public Vector2[] boundaryPositions;
+    public Color[] boundaryColors;
     public Vector2 maxVelocity = new Vector2(2, 9);
     public float timeStepMultiplyer = 0.9f;
     public float timeStep;
@@ -75,22 +72,8 @@ public class SimulationScript : MonoBehaviour
         // Define boundaries of our simulation domain
         start = new Vector2(1, 1);
         boundaries = new Vector2(16, 9);
-        // InitializeParticles(1800);
-        // spawnInEveryCell(3, 3, 25, 18);
-        ResetValues();
-        if (tests == 0)
-        {
-            spawnInEveryCell(3, 3, 15, 10);
-        }
-        if (tests == 1)
-        {
-            initializeParticles((int)amountParticles.x, (int)amountParticles.y, particlePosition, particleStartSpacing);
-        }
-        else if (tests == 2)
-        {
-            spawnSquareParticles(new Vector2(2, 2), 10, 10, particleSpacing / 12);
-            gravity = 0;
-        }
+
+        initializeParticles((int)amountParticles.x, (int)amountParticles.y, particlePosition, particleStartSpacing);
 
         // Update grid
         spatialGrid.emptyGrid();
@@ -99,121 +82,113 @@ public class SimulationScript : MonoBehaviour
         // Initialize boundary particles
         initializeBorder();
 
-        numParticles = positions.Count;
-        numBoundaries = boundaryPositions.Count;
-
-        neighbors = new List<int>[numParticles];
-        boundaryNeighbors = new List<int>[numParticles];
+        numParticles = positions.Length;
+        numBoundaries = boundaryPositions.Length;
 
         // Inform the shader about the total amount of drawn particles
-        drawCirclesScript.total = positions.Count + boundaryPositions.Count;
+        drawCirclesScript.total = positions.Length + boundaryPositions.Length;
 
     }
-
-    void resetPositions()
+    void ResetValues(int amount)
     {
-        for (int i = 0; i < positions.Count; i++)
-        {
-            positions[i] = new Vector2(-1, -1);
-        }
-    }
-    void ResetValues()
-    {
-        positions = new List<Vector2>();
-        velocitys = new List<Vector2>();
-        colors = new List<Color>();
-        densitys = new List<float>();
-        pressures = new List<float>();
-        forces = new List<Vector2>();
-        nPForces = new List<Vector2>();
-        predictedPositions = new List<Vector2>();
-        predictedVelocitys = new List<Vector2>();
-        boundaryPositions = new List<Vector2>();
-        boundaryColors = new List<Color>();
+        positions = new Vector2[amount];
+        velocitys = new Vector2[amount];
+        colors = new Color[amount];
+        densitys = new float[amount];
+        pressures = new float[amount];
+        forces = new Vector2[amount];
+        nPForces = new Vector2[amount];
+        predictedPositions = new Vector2[amount];
+        predictedVelocitys = new Vector2[amount];
+        boundaryPositions = new Vector2[amount];
+        boundaryColors = new Color[amount];
+        neighbors = new List<int>[amount];
+        boundaryNeighbors = new List<int>[amount];
     }
 
     void initializeParticles(int numX, int numY, Vector2 start, float spacing)
     {
+        int amount = numX * numY;
+        int index = 0;
+        ResetValues(amount);
         for (int x = 0; x < numX; x++)
         {
             float xx = start.x + spacing * x;
             for (int y = 0; y < numY; y++)
             {
                 float yy = start.y + spacing * y;
-                InitParticle(new Vector2(xx, yy), Color.blue);
+                InitParticle(index, new Vector2(xx, yy), Color.blue);
+                index++;
             }
         }
 
     }
-    void drawBorder()
-    {
-        Vector2 leftUp = new Vector2(start.x, boundaries.y);
-        Vector2 rightUp = new Vector2(boundaries.x, boundaries.y);
-        Vector2 rightDown = new Vector2(boundaries.x, start.y);
-        Vector2 leftDown = new Vector2(start.x, start.y);
-        Debug.DrawLine(leftUp, rightUp, Color.green, 100f);
-        Debug.DrawLine(leftUp, leftDown, Color.green, 100f);
-        Debug.DrawLine(leftDown, rightDown, Color.green, 100f);
-        Debug.DrawLine(rightDown, rightUp, Color.green, 100f);
-    }
-
     void initializeBorder()
     {
+        int index = 0;
         // Left row
         for (float y = start.y; y < boundaries.y; y += particleSize * 2)
         {
-            boundaryPositions.Add(new Vector2(start.x, y));
-            boundaryColors.Add(Color.black);
+            boundaryPositions[index] = new Vector2(start.x, y);
+            boundaryColors[index] = Color.black;
+            index++;
         }
 
 
         // Double
         for (float y = start.y; y < boundaries.y + 4 * particleSize; y += particleSize * 2)
         {
-            boundaryPositions.Add(new Vector2(start.x - 2 * particleSize, y));
-            boundaryColors.Add(Color.black);
+            boundaryPositions[index] = new Vector2(start.x - 2 * particleSize, y);
+            boundaryColors[index] = Color.black;
+            index++;
         }
 
         // Right row
         for (float y = start.y; y < boundaries.y; y += particleSize * 2)
         {
-            boundaryPositions.Add(new Vector2(boundaries.x, y));
-            boundaryColors.Add(Color.black);
+            boundaryPositions[index] = new Vector2(boundaries.x, y);
+            boundaryColors[index] = Color.black;
+            index++;
         }
 
         // Double
         for (float y = start.y - 2 * particleSize; y < boundaries.y + 2 * particleSize; y += particleSize * 2)
         {
-            boundaryPositions.Add(new Vector2(boundaries.x + 2 * particleSize, y));
-            boundaryColors.Add(Color.black);
+            boundaryPositions[index] = new Vector2(boundaries.x + 2 * particleSize, y);
+            boundaryColors[index] = Color.black;
+            index++;
         }
 
         // Bottom row
         for (float x = start.x; x < boundaries.x; x += particleSize * 2)
         {
-            boundaryPositions.Add(new Vector2(x, start.y));
-            boundaryColors.Add(Color.black);
+            boundaryPositions[index] = new Vector2(x, start.y);
+            boundaryColors[index] = Color.black;
+            index++;
         }
 
         // Double
         for (float x = start.x - 2 * particleSize; x < boundaries.x; x += particleSize * 2)
         {
-            boundaryPositions.Add(new Vector2(x, start.y - 2 * particleSize));
-            boundaryColors.Add(Color.black);
+            boundaryPositions[index] = new Vector2(x, start.y - 2 * particleSize);
+            boundaryColors[index] = Color.black;
+            index++;
         }
 
         // Top row
         for (float x = start.x; x < boundaries.x; x += particleSize * 2)
         {
-            boundaryPositions.Add(new Vector2(x, boundaries.y + 0.5f * particleSize));
-            boundaryColors.Add(Color.black);
+            boundaryPositions[index] = new Vector2(x, boundaries.y + 0.5f * particleSize);
+            boundaryColors[index] = Color.black;
+            index++;
         }
 
         // Double
         for (float x = start.x; x < boundaries.x + 2 * particleSize; x += particleSize * 2)
         {
-            boundaryPositions.Add(new Vector2(x, boundaries.y + 2.5f * particleSize));
-            boundaryColors.Add(Color.black);
+            boundaryPositions[index] = new Vector2(x, boundaries.y + 2.5f * particleSize);
+            boundaryColors[index] = Color.black;
+            index++;
         }
     }
 
@@ -221,16 +196,6 @@ public class SimulationScript : MonoBehaviour
     void Update()
 
     {
-        // if (tests == 1 && !moveParticles)
-        // {
-        //     Start();
-        //     // ResetValues();
-        //     // initializeParticles((int)amountParticles.x, (int)amountParticles.y, particlePosition, particleStartSpacing);
-        //     // initializeBorder();
-        //     // ResetNeighbors();
-        //     // DrawParticles();
-        // }
-
         // Start Stop Simulation
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -246,18 +211,9 @@ public class SimulationScript : MonoBehaviour
         // Clean particles
         if (Input.GetKeyDown(KeyCode.C))
         {
-            // ResetValues();
-            positions = new List<Vector2>();
-            velocitys = new List<Vector2>();
-            colors = new List<Color>();
-            densitys = new List<float>();
-            pressures = new List<float>();
-            forces = new List<Vector2>();
-            nPForces = new List<Vector2>();
-            predictedPositions = new List<Vector2>();
-            predictedVelocitys = new List<Vector2>();
+            ResetValues(0);
             numParticles = 0;
-            drawCirclesScript.total = boundaryPositions.Count;
+            numBoundaries = 0;
         }
 
         if (Input.GetKey(KeyCode.S))
@@ -412,48 +368,45 @@ public class SimulationScript : MonoBehaviour
     // Draw all Particles at Position with their respective color
     private void DrawParticles()
     {
-        List<Vector2> particlePositions = new List<Vector2>();
-        particlePositions.AddRange(positions);
-        particlePositions.AddRange(boundaryPositions);
+        Vector2[] particlePositions = positions.Concat(boundaryPositions).ToArray();
 
-        List<Color> particleColors = new List<Color>();
-        particleColors.AddRange(colors);
-        particleColors.AddRange(boundaryColors);
+        Color[] particleColors = colors.Concat(boundaryColors).ToArray();
 
         drawCirclesScript.DrawCirclesAtPositions(convertPositions(particlePositions), particleColors, particleSize * 102.4f);
-        drawCirclesScript.DispatchKernel(Mathf.Max(particlePositions.Count / 16, 1));
+        drawCirclesScript.DispatchKernel(Mathf.Max(particlePositions.Length / 16, 1));
     }
 
     // Convert positions to texCoords
-    private List<Vector2> convertPositions(List<Vector2> pos)
+    private Vector2[] convertPositions(Vector2[] pos)
     {
-        List<Vector2> results = new List<Vector2>();
-        for (int i = 0; i < pos.Count; i++)
+        Vector2[] results = new Vector2[pos.Length];
+        for (int i = 0; i < pos.Length; i++)
         {
-            results.Add(pos[i] * 102.4f);
+            results[i] = pos[i] * 102.4f;
         }
         return results;
     }
 
     // Initialize particle
-    private void InitParticle(Vector2 position, Color color)
+    private void InitParticle(int index, Vector2 position, Color color)
     {
-        positions.Add(position);
-        velocitys.Add(new Vector2(0, 0));
-        colors.Add(color);
-        densitys.Add(0.0f);
-        pressures.Add(0.0f);
-        forces.Add(new Vector2(0, 0));
-        nPForces.Add(new Vector2(0, 0));
-        predictedPositions.Add(new Vector2(0, 0));
-        predictedVelocitys.Add(new Vector2(0, 0));
+        positions[index] = position;
+        velocitys[index] = new Vector2(0, 0);
+        colors[index] = color;
+        densitys[index] = 0.0f;
+        pressures[index] = 0.0f;
+        forces[index] = new Vector2(0, 0);
+        nPForces[index] = new Vector2(0, 0);
+        predictedPositions[index] = new Vector2(0, 0);
+        predictedVelocitys[index] = new Vector2(0, 0);
     }
     // Initialize Particles
     private void InitializeRandomParticles(int num)
     {
+        int index = 0;
         for (int i = 0; i < num; i++)
         {
-            InitParticle(new Vector2(Random.Range(start.x + 1, boundaries.x - 1), Random.Range(start.y + 1, boundaries.y - 1)),
+            InitParticle(index, new Vector2(Random.Range(start.x + 1, boundaries.x - 1), Random.Range(start.y + 1, boundaries.y - 1)),
             Color.blue);
         }
     }
@@ -461,11 +414,12 @@ public class SimulationScript : MonoBehaviour
     // Initialize square of particles
     private void spawnSquareParticles(Vector2 origin, int width, int height, float particleSpace)
     {
+        int index = 0;
         for (float x = origin.x; x < origin.x + (width) * 2 * (particleSize + particleSpace); x += 2 * (particleSize + particleSpace))
         {
             for (float y = origin.y; y < origin.y + (height - 1) * 2 * (particleSize + particleSpace); y += 2 * (particleSize + particleSpace))
             {
-                InitParticle(new Vector2(x, y), Color.blue);
+                InitParticle(index, new Vector2(x, y), Color.blue);
             }
         }
     }
@@ -577,36 +531,9 @@ public class SimulationScript : MonoBehaviour
         forces[particle] = -result - result2;
     }
 
-    // Testing 0: Helper functions
-
-    // private void containParticles(int particle)
-    // {
-    //     if (positions[particle].x > boundaries.x)
-    //     {
-    //         positions[particle].x = boundaries.x;
-    //         velocitys[particle] *= -1 * damping;
-    //     }
-    //     if (positions[particle].x < start.x)
-    //     {
-    //         positions[particle].x = start.x;
-    //         velocitys[particle] *= -1 * damping;
-    //     }
-    //     if (positions[particle].y > boundaries.y)
-    //     {
-    //         positions[particle].y = boundaries.y;
-    //         velocitys[particle] *= -1 * damping;
-    //     }
-    //     if (positions[particle].y < start.y)
-    //     {
-    //         positions[particle].y = start.y;
-    //         velocitys[particle] *= -1 * damping;
-    //     }
-    // }
-
     // My smoothing Kernel implemented as a cubic spline kernel
     public float smoothingKernel(Vector2 xi, Vector2 xj, float h)
     {
-        // float alpha = 5 / (14 * Mathf.PI * (h * h));
         float d = Vector2.Distance(xi, xj) / h;
         float t1 = Mathf.Max(1 - d, 0);
         float t2 = Mathf.Max(2 - d, 0);
@@ -616,7 +543,6 @@ public class SimulationScript : MonoBehaviour
     // My kernel Gradient
     public Vector2 smoothingKernelDerivative(Vector2 xi, Vector2 xj, float h)
     {
-        // float alpha = 5 / (14 * Mathf.PI * (h * h));
         float d = Vector2.Distance(xi, xj) / h;
         float t1 = Mathf.Max(1 - d, 0);
         float t2 = Mathf.Max(2 - d, 0);
@@ -646,10 +572,10 @@ public class SimulationScript : MonoBehaviour
         Vector2 point2 = new Vector2(coords.x - step, coords.y - 3 * step);
         Vector2 point3 = new Vector2(coords.x - 3 * step, coords.y - 3 * step);
         Vector2 point4 = new Vector2(coords.x - 3 * step, coords.y - step);
-        InitParticle(point1, Color.blue);
-        InitParticle(point2, Color.blue);
-        InitParticle(point3, Color.blue);
-        InitParticle(point4, Color.blue);
+        InitParticle(0, point1, Color.blue);
+        InitParticle(0, point2, Color.blue);
+        InitParticle(0, point3, Color.blue);
+        InitParticle(0, point4, Color.blue);
     }
 
     // Spawn particles in every cell

@@ -325,8 +325,8 @@ MonoBehaviour:
   maxVelocity: {x: 5, y: 5}
   timeStepMultiplyer: 0.9
   timeStep: 0
-  stiffness: 160
-  v: 0.05
+  stiffness: 170
+  v: 0.1
   numParticles: 0
   numBoundaries: 0
   particleSize: 0

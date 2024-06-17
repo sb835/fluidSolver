@@ -88,9 +88,9 @@ public class DrawCirclesScript : MonoBehaviour
         buffer.Dispose();
     }
 
-    public void DrawCirclesAtPositions(List<Vector2> positions, List<Color> colors, float radius)
+    public void DrawCirclesAtPositions(Vector2[] positions, Color[] colors, float radius)
     {
-        for (int i = 0; i < positions.Count; i++)
+        for (int i = 0; i < positions.Length; i++)
         {
             Circle circle = circleData[i];
             circle.origin = positions[i];
