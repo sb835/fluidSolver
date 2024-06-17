@@ -148,9 +148,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c8fa63d15bf2754ebc9eb7a3f4cc660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 40
-  height: 20
-  cellSize: 0.5
+  width: 60
+  height: 40
+  cellSize: 0.4
 --- !u!4 &155552757
 Transform:
   m_ObjectHideFlags: 0
@@ -304,11 +304,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveParticles: 0
   colorParticles: 0
-  withSplitting: 1
+  withSplitting: 0
   tests: 1
-  amountParticles: {x: 1, y: 1}
-  particlePosition: {x: 8, y: 4}
-  particleStartSpacing: 0.17
+  amountParticles: {x: 30, y: 30}
+  particlePosition: {x: 2, y: 2}
+  particleStartSpacing: 0.2
   speedColor: 4
   alpha: 1.817348
   positions: []
@@ -322,10 +322,11 @@ MonoBehaviour:
   predictedVelocitys: []
   boundaryPositions: []
   boundaryColors: []
-  maxVelocity: {x: 0, y: 0}
+  maxVelocity: {x: 5, y: 5}
   timeStepMultiplyer: 0.9
   timeStep: 0
-  stiffness: 80
+  stiffness: 160
+  v: 0.05
   numParticles: 0
   numBoundaries: 0
   particleSize: 0
@@ -336,7 +337,7 @@ MonoBehaviour:
   texResolution: 2048
   kernelSupportRadius: 0
   mainCamera: {fileID: 519420031}
-  gravity: 0
+  gravity: -2
   currentParticle: 0
   currentGridCell: {x: 0, y: 0}
 --- !u!1 &598455287

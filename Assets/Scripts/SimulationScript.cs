@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SimulationScript : MonoBehaviour
 {
@@ -31,6 +34,7 @@ public class SimulationScript : MonoBehaviour
     public float timeStepMultiplyer = 0.9f;
     public float timeStep;
     public float stiffness = 100.0f;
+    public float v;
     public int numParticles;
     public int numBoundaries;
     public float particleSize;
@@ -67,9 +71,6 @@ public class SimulationScript : MonoBehaviour
         particleMass = startDensity * particleVolume;
         particleSize = particleMass;
         kernelSupportRadius = particleSpacing * 2;
-
-        // particleStartSpacing = particleSpacing;
-        // particlePosition = new Vector2(5, 5);
 
         // Define boundaries of our simulation domain
         start = new Vector2(1, 1);
@@ -109,6 +110,13 @@ public class SimulationScript : MonoBehaviour
 
     }
 
+    void resetPositions()
+    {
+        for (int i = 0; i < positions.Count; i++)
+        {
+            positions[i] = new Vector2(-1, -1);
+        }
+    }
     void ResetValues()
     {
         positions = new List<Vector2>();
@@ -118,11 +126,12 @@ public class SimulationScript : MonoBehaviour
         pressures = new List<float>();
         forces = new List<Vector2>();
         nPForces = new List<Vector2>();
-        boundaryPositions = new List<Vector2>();
-        boundaryColors = new List<Color>();
         predictedPositions = new List<Vector2>();
         predictedVelocitys = new List<Vector2>();
+        boundaryPositions = new List<Vector2>();
+        boundaryColors = new List<Color>();
     }
+
     void initializeParticles(int numX, int numY, Vector2 start, float spacing)
     {
         for (int x = 0; x < numX; x++)
@@ -212,6 +221,64 @@ public class SimulationScript : MonoBehaviour
     void Update()
 
     {
+        // if (tests == 1 && !moveParticles)
+        // {
+        //     Start();
+        //     // ResetValues();
+        //     // initializeParticles((int)amountParticles.x, (int)amountParticles.y, particlePosition, particleStartSpacing);
+        //     // initializeBorder();
+        //     // ResetNeighbors();
+        //     // DrawParticles();
+        // }
+
+        // Start Stop Simulation
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            moveParticles = !moveParticles;
+        }
+
+        // Restart
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            Start();
+        }
+
+        // Clean particles
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            // ResetValues();
+            positions = new List<Vector2>();
+            velocitys = new List<Vector2>();
+            colors = new List<Color>();
+            densitys = new List<float>();
+            pressures = new List<float>();
+            forces = new List<Vector2>();
+            nPForces = new List<Vector2>();
+            predictedPositions = new List<Vector2>();
+            predictedVelocitys = new List<Vector2>();
+            numParticles = 0;
+            drawCirclesScript.total = boundaryPositions.Count;
+        }
+
+        if (Input.GetKey(KeyCode.S))
+        {
+            Vector3 screenPosition = Input.mousePosition;
+            screenPosition.z = Camera.main.nearClipPlane + 1;
+            mouseForceOut(Camera.main.ScreenToWorldPoint(screenPosition), 2f, 1.5f);
+        }
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            Vector3 screenPosition = Input.mousePosition;
+            screenPosition.z = Camera.main.nearClipPlane + 1;
+            mouseForceIn(Camera.main.ScreenToWorldPoint(screenPosition), 2f, 1.5f);
+        }
+
+        // Mouse input
+        if (Input.GetMouseButton(0))
+        {
+            ReturnMouse();
+        }
         // Update particle size
         particleMass = startDensity * particleVolume;
         particleSize = particleMass;
@@ -240,60 +307,25 @@ public class SimulationScript : MonoBehaviour
                 spatialGrid.grid[(int)gridCoords.x, (int)gridCoords.y].Add(i + numParticles);
             }
         }
-
-        // Start Stop Simulation
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            moveParticles = !moveParticles;
-        }
-
-        // Restart
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            Start();
-            moveParticles = false;
-        }
-
-        // Mouse input
-        if (Input.GetMouseButton(0))
-        {
-            ReturnMouse();
-        }
-
-        if (Input.GetKey(KeyCode.S))
-        {
-            Vector3 screenPosition = Input.mousePosition;
-            screenPosition.z = Camera.main.nearClipPlane + 1;
-            mouseForceOut(Camera.main.ScreenToWorldPoint(screenPosition), 2f, 1.5f);
-        }
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            Vector3 screenPosition = Input.mousePosition;
-            screenPosition.z = Camera.main.nearClipPlane + 1;
-            mouseForceIn(Camera.main.ScreenToWorldPoint(screenPosition), 2f, 1.5f);
-        }
-
         // Check for max velocity
-        for (int i = 0; i < numParticles; i++)
+        Parallel.For(0, numParticles, i =>
         {
             if (velocitys[i].magnitude > maxVelocity.magnitude && velocitys[i].y > -15 && velocitys[i].magnitude > 0)
             {
                 maxVelocity = velocitys[i];
             }
-        }
+        });
 
         // Change color according to velocity
         if (colorParticles)
         {
-            for (int i = 0; i < numParticles; i++)
+            Parallel.For(0, numParticles, i =>
             {
                 float speed = velocitys[i].magnitude / speedColor;
                 // float speed = 1.15f;
                 colors[i] = Color.Lerp(Color.blue, Color.red, speed);
-            }
+            });
         }
-
         // Calculate time step
         // timeStep = timeStepMultiplyer * (particleSpacing / maxVelocity.magnitude);
         SimulationStep(0.02f);
@@ -305,19 +337,21 @@ public class SimulationScript : MonoBehaviour
     {
 
         // Find all neighbors for each particle
-        for (int i = 0; i < numParticles; i++)
+        Parallel.For(0, numParticles, i =>
         {
             findNeighbors(i);
-        }
+        });
 
         // Compute non-pressure accelerations
-        for (int i = 0; i < numParticles; i++)
+        Parallel.For(0, numParticles, i =>
         {
-            nPForces[i] = new Vector2(0, gravity);
-        }
+            Vector2 v = computeViscosityAcceleration(i);
+            Vector2 g = new Vector2(0, gravity);
+            nPForces[i] = v + g;
+        });
 
         // Predict next positions
-        for (int i = 0; i < numParticles; i++)
+        Parallel.For(0, numParticles, i =>
         {
             if (withSplitting)
             {
@@ -329,28 +363,27 @@ public class SimulationScript : MonoBehaviour
                 predictedVelocitys[i] = velocitys[i];
                 predictedPositions[i] = positions[i];
             }
-        }
+        });
 
         // Compute densitys
-        for (int i = 0; i < numParticles; i++)
+        Parallel.For(0, numParticles, i =>
         {
             computeDensity(i);
-        }
-
+        });
         // Compute pressures
-        for (int i = 0; i < numParticles; i++)
+        Parallel.For(0, numParticles, i =>
         {
             pressures[i] = Mathf.Max(stiffness * ((densitys[i] / startDensity) - 1), 0);
-        }
+        });
 
         // Compute pressure forces
-        for (int i = 0; i < numParticles; i++)
+        Parallel.For(0, numParticles, i =>
         {
             computePressureAcceleration(i);
-        }
+        });
 
         // Update particle
-        for (int i = 0; i < numParticles; i++)
+        Parallel.For(0, numParticles, i =>
         {
             Vector2 acceleration = new Vector2(0, 0);
             if (withSplitting)
@@ -365,8 +398,7 @@ public class SimulationScript : MonoBehaviour
             {
                 MoveParticles(acceleration, i, deltaTime);
             }
-        }
-
+        });
     }
 
     //Move particles
@@ -387,7 +419,6 @@ public class SimulationScript : MonoBehaviour
         List<Color> particleColors = new List<Color>();
         particleColors.AddRange(colors);
         particleColors.AddRange(boundaryColors);
-
 
         drawCirclesScript.DrawCirclesAtPositions(convertPositions(particlePositions), particleColors, particleSize * 102.4f);
         drawCirclesScript.DispatchKernel(Mathf.Max(particlePositions.Count / 16, 1));
@@ -491,6 +522,22 @@ public class SimulationScript : MonoBehaviour
         }
         neighbors[particle] = n;
         boundaryNeighbors[particle] = b;
+    }
+
+
+    // Compute viscosity acceleration of particle i
+    private Vector2 computeViscosityAcceleration(int particle)
+    {
+        Vector2 viscosity = new Vector2(0, 0);
+        foreach (int num in neighbors[particle])
+        {
+            Vector2 xij = positions[particle] - positions[num];
+            Vector2 vij = velocitys[particle] - velocitys[num];
+            Vector2 formula = vij * xij / ((xij * xij) + new Vector2(0.01f * particleSpacing * particleSpacing, 0.01f * particleSpacing * particleSpacing));
+            Vector2 gradient = smoothingKernelDerivative(positions[particle], positions[num], particleSpacing);
+            viscosity += particleMass / densitys[num] * formula * gradient;
+        }
+        return 2 * v * viscosity;
     }
 
     // Compute density for each particle

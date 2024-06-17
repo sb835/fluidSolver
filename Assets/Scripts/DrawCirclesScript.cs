@@ -30,7 +30,7 @@ public class DrawCirclesScript : MonoBehaviour
 
 
     // Use this for initialization
-    void Start()
+    public void Start()
     {
         outputTexture = new RenderTexture(texResolution, texResolution, 0);
         outputTexture.enableRandomWrite = true;
