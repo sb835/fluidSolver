@@ -29,7 +29,8 @@ public class ParticleScript : MonoBehaviour
     void Start()
     {
         simulation = GameObject.FindGameObjectWithTag("Simulation").GetComponent<SimulationScript>();
-        alpha = 5 / (14 * Mathf.PI * (simulation.particleSpacing * simulation.particleSpacing));
+        // alpha = 5 / (14 * Mathf.PI * (simulation.particleSpacing * simulation.particleSpacing));
+        alpha = 2.839606f;
     }
 
     // Update is called once per frame
@@ -88,7 +89,7 @@ public class ParticleScript : MonoBehaviour
             // Check for perfect density
             for (int i = 0; i < simulation.numParticles; i++)
             {
-                if (Mathf.Abs(simulation.densitys[i] - 1.5f) <= 0.000001)
+                if (Mathf.Abs(simulation.densitys[i] - 1.5f) <= 0.00001)
                 {
                     if (colorDensitys)
                     {
@@ -96,7 +97,7 @@ public class ParticleScript : MonoBehaviour
                     }
                     sumDensity++;
                 }
-                if (Mathf.Abs(simulation.pressures[i]) <= 0.0001)
+                if (Mathf.Abs(simulation.pressures[i]) <= 0.001)
                 {
                     sumPressure++;
                 }

@@ -8,7 +8,9 @@ public class SimulationScript : MonoBehaviour
     public bool moveParticles = false;
     public bool colorParticles = false;
     public bool withSplitting = true;
+    public bool countAvgDensity = false;
     public int tests = 1;
+    public List<float> averageDensity;
     public Vector2 amountParticles;
     public Vector2 particlePosition;
     public float particleStartSpacing;
@@ -87,6 +89,8 @@ public class SimulationScript : MonoBehaviour
 
         // Inform the shader about the total amount of drawn particles
         drawCirclesScript.total = positions.Length + boundaryPositions.Length;
+
+        averageDensity = new List<float>();
 
     }
     void ResetValues(int amount)
@@ -271,6 +275,17 @@ public class SimulationScript : MonoBehaviour
                 maxVelocity = velocitys[i];
             }
         });
+
+        if (countAvgDensity)
+        {
+            // Add average density
+            float avgDensity = 0.0f;
+            Parallel.For(0, numParticles, i =>
+            {
+                avgDensity += densitys[i];
+            });
+            averageDensity.Add(avgDensity / numParticles);
+        }
 
         // Change color according to velocity
         if (colorParticles)
