@@ -90,6 +90,8 @@ public class DrawCirclesScript : MonoBehaviour
 
     public void DrawCirclesAtPositions(Vector2[] positions, Color[] colors, float radius)
     {
+        InitData();
+        InitShader();
         for (int i = 0; i < positions.Length; i++)
         {
             Circle circle = circleData[i];

@@ -305,8 +305,13 @@ MonoBehaviour:
   moveParticles: 0
   colorParticles: 0
   withSplitting: 0
+  countAvgDensity: 0
+  countCFLConditions: 0
+  resetParticles: 1
+  borderOffset: 1
   tests: 1
   averageDensity: []
+  cflConditions: []
   amountParticles: {x: 30, y: 30}
   particlePosition: {x: 2.1, y: 2.1}
   particleStartSpacing: 0.2
@@ -324,10 +329,10 @@ MonoBehaviour:
   boundaryPositions: []
   boundaryColors: []
   maxVelocity: {x: 5, y: 5}
-  timeStepMultiplyer: 0.9
-  timeStep: 0
-  stiffness: 180
-  v: 0.1
+  timeStepMultiplyer: 1
+  timeStep: 0.015
+  stiffness: 400
+  v: 0.05
   numParticles: 0
   numBoundaries: 0
   particleSize: 0
@@ -434,13 +439,13 @@ MonoBehaviour:
   updatePeriod: 5
   graphSize: {x: 800, y: 400}
   graphScale: {x: 100, y: 100}
-  backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
   outlineWidth: 5
-  outlineColor: {r: 0, g: 0.8, b: 1, a: 1}
+  outlineColor: {r: 1, g: 0.5437566, b: 0, a: 1}
   lineWidth: 2
-  lineColor: {r: 1, g: 0.35, b: 0, a: 1}
+  lineColor: {r: 0, g: 0.23821163, b: 1, a: 1}
   PointSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  pointRadius: 5
+  pointRadius: 0
   pointColor: {r: 1, g: 0.35, b: 0, a: 1}
   pointHoverRadius: 15
   PointHoverSpeed: 5
@@ -448,8 +453,8 @@ MonoBehaviour:
   pointLockedRadius: 17
   PointLockedSpeed: 5
   pointLockedColor: {r: 1, g: 0.8, b: 0, a: 1}
-  unfixedPointOutlineWidth: 10
-  unfixedPointOutlineColor: {r: 0, g: 0.8, b: 1, a: 1}
+  unfixedPointOutlineWidth: 5
+  unfixedPointOutlineColor: {r: 0, g: 0.19908905, b: 1, a: 1}
   unfixedPointOutlineHoverWidth: 15
   UnfixedPointOutlineHoverSpeed: 5
   unfixedPointOutlineHoverColor: {r: 0, g: 0.5, b: 1, a: 1}
@@ -459,19 +464,19 @@ MonoBehaviour:
   GridTextFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   gridSpacing: {x: 1, y: 1}
   xAxisWidth: 3
-  xAxisColor: {r: 0, g: 0.8, b: 1, a: 1}
-  xAxisTextColor: {r: 0, g: 0.8, b: 1, a: 1}
+  xAxisColor: {r: 0.006289184, g: 0.006289184, b: 0.006289184, a: 1}
+  xAxisTextColor: {r: 0, g: 0, b: 0, a: 1}
   xAxisTextSize: 10
   xAxisTextOffset: 10
   yAxisWidth: 3
-  yAxisColor: {r: 0, g: 0.8, b: 1, a: 1}
-  yAxisTextColor: {r: 0, g: 0.8, b: 1, a: 1}
+  yAxisColor: {r: 0, g: 0, b: 0, a: 1}
+  yAxisTextColor: {r: 0, g: 0, b: 0, a: 1}
   yAxisTextSize: 10
-  yAxisTextOffset: 10
+  yAxisTextOffset: -20
   xGridWidth: 2
-  xGridColor: {r: 0, g: 0.8, b: 1, a: 0.6}
+  xGridColor: {r: 0, g: 0, b: 0, a: 0.6}
   yGridWidth: 2
-  yGridColor: {r: 0, g: 0.8, b: 1, a: 0.6}
+  yGridColor: {r: 0, g: 0, b: 0, a: 0.6}
   zoomSelectionColor: {r: 0, g: 0.8, b: 1, a: 0.2}
   zoomSelectionOutlineWidth: 5
   zoomSelectionOutlineColor: {r: 0, g: 0.8, b: 1, a: 0.6}
@@ -493,7 +498,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e975d233274ec364ba3ce747dfe32094, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  updateGraph: 0
+  updateGraph: 1
   canvas: {fileID: 0}
   activePointIndex: -1
   fixedPointIndex: -1

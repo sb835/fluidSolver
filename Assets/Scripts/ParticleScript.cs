@@ -42,13 +42,13 @@ public class ParticleScript : MonoBehaviour
         particle = simulation.currentParticle;
         gridCell = simulation.currentGridCell;
 
-        if (simulation.moveParticles && simulation.positions.Length > 0)
+        if (simulation.moveParticles && simulation.positions.Count > 0)
         {
             simulation.colorNeighbors(particle, Color.blue);
             simulation.colorBoundaryNeighbors(particle, Color.black);
         }
 
-        if (!simulation.moveParticles && simulation.positions.Length > 0)
+        if (!simulation.moveParticles && simulation.positions.Count > 0)
         {
 
             particlePosition = simulation.positions[particle];

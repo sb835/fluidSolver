@@ -45,7 +45,29 @@ public class GraphHandler : MonoBehaviour
         for (int i = 0; i < avgDensitys.Count; i++)
         {
             CreatePoint(new Vector2(counter, avgDensitys[i]));
+            counter += 0.01f;
+        }
+        UpdateGraph();
+    }
+
+    private void cflNumber(List<float> cfl)
+    {
+        float counter = 0.0f;
+        for (int i = 0; i < cfl.Count; i++)
+        {
+            CreatePoint(new Vector2(counter, cfl[i]));
             counter += 0.001f;
+        }
+        CreatePoint(new Vector2(1, 0.015f));
+        CreatePoint(new Vector2(0, 0.015f));
+        UpdateGraph();
+    }
+
+    private void timeStep(float tp)
+    {
+        for (float i = 0; i < 2; i += 0.3f)
+        {
+            CreatePoint(new Vector2(i, tp));
         }
         UpdateGraph();
     }
@@ -220,7 +242,9 @@ public class GraphHandler : MonoBehaviour
         PrepareGraph();
         // ExampleFunction();
         simulation = GameObject.FindGameObjectWithTag("Simulation").GetComponent<SimulationScript>();
-        averageDensity(simulation.averageDensity);
+        // timeStep(simulation.timeStep);
+        // averageDensity(simulation.averageDensity);
+        cflNumber(simulation.cflConditions);
     }
     private void Update()
     {
