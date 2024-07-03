@@ -308,7 +308,7 @@ MonoBehaviour:
   countAvgDensity: 0
   countCFLConditions: 0
   resetParticles: 1
-  borderOffset: 1
+  borderOffset: 5
   tests: 1
   averageDensity: []
   cflConditions: []
@@ -437,12 +437,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updatePeriod: 5
-  graphSize: {x: 800, y: 400}
+  graphSize: {x: 1920, y: 1080}
   graphScale: {x: 100, y: 100}
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
   outlineWidth: 5
   outlineColor: {r: 1, g: 0.5437566, b: 0, a: 1}
-  lineWidth: 2
+  lineWidth: 5
   lineColor: {r: 0, g: 0.23821163, b: 1, a: 1}
   PointSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   pointRadius: 0

@@ -258,6 +258,10 @@ public class SimulationScript : MonoBehaviour
             neighbors = new List<int>[positions.Count];
             boundaryNeighbors = new List<int>[positions.Count];
 
+            averageDensity = new List<float>();
+
+            cflConditions = new List<float>();
+
             // Inform the shader about the total amount of drawn particles
             drawCirclesScript.total = positions.Count + boundaryPositions.Count;
         }
