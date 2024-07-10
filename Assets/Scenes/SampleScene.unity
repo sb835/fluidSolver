@@ -148,8 +148,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c8fa63d15bf2754ebc9eb7a3f4cc660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 60
-  height: 40
+  width: 55
+  height: 50
   cellSize: 0.4
 --- !u!4 &155552757
 Transform:
@@ -308,12 +308,12 @@ MonoBehaviour:
   countAvgDensity: 0
   countCFLConditions: 0
   resetParticles: 1
-  borderOffset: 5
+  borderOffset: 7
   tests: 1
   averageDensity: []
   cflConditions: []
-  amountParticles: {x: 30, y: 30}
-  particlePosition: {x: 2.1, y: 2.1}
+  amountParticles: {x: 0, y: 0}
+  particlePosition: {x: 1.1, y: 1.1}
   particleStartSpacing: 0.2
   speedColor: 4
   alpha: 2.839606
@@ -330,7 +330,7 @@ MonoBehaviour:
   boundaryColors: []
   maxVelocity: {x: 5, y: 5}
   timeStepMultiplyer: 1
-  timeStep: 0.015
+  timeStep: 0.014
   stiffness: 400
   v: 0.05
   numParticles: 0
@@ -406,124 +406,6 @@ MonoBehaviour:
   pressure: 0
   numPerfectDensitys: 0
   numPerfectPressure: 0
---- !u!1 &1251952509
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1251952512}
-  - component: {fileID: 1251952511}
-  - component: {fileID: 1251952510}
-  m_Layer: 0
-  m_Name: GraphHandler
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1251952510
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1251952509}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b3f3c6051faf1e4e89fa291a42bca57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  updatePeriod: 5
-  graphSize: {x: 1920, y: 1080}
-  graphScale: {x: 100, y: 100}
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 5
-  outlineColor: {r: 1, g: 0.5437566, b: 0, a: 1}
-  lineWidth: 5
-  lineColor: {r: 0, g: 0.23821163, b: 1, a: 1}
-  PointSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  pointRadius: 0
-  pointColor: {r: 1, g: 0.35, b: 0, a: 1}
-  pointHoverRadius: 15
-  PointHoverSpeed: 5
-  pointHoverColor: {r: 1, g: 0.6, b: 0, a: 1}
-  pointLockedRadius: 17
-  PointLockedSpeed: 5
-  pointLockedColor: {r: 1, g: 0.8, b: 0, a: 1}
-  unfixedPointOutlineWidth: 5
-  unfixedPointOutlineColor: {r: 0, g: 0.19908905, b: 1, a: 1}
-  unfixedPointOutlineHoverWidth: 15
-  UnfixedPointOutlineHoverSpeed: 5
-  unfixedPointOutlineHoverColor: {r: 0, g: 0.5, b: 1, a: 1}
-  fixedPointOutlineWidth: 17
-  FixedPointOutlineSpeed: 5
-  fixedPointOutlineColor: {r: 0, g: 0.8, b: 1, a: 1}
-  GridTextFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  gridSpacing: {x: 1, y: 1}
-  xAxisWidth: 3
-  xAxisColor: {r: 0.006289184, g: 0.006289184, b: 0.006289184, a: 1}
-  xAxisTextColor: {r: 0, g: 0, b: 0, a: 1}
-  xAxisTextSize: 10
-  xAxisTextOffset: 10
-  yAxisWidth: 3
-  yAxisColor: {r: 0, g: 0, b: 0, a: 1}
-  yAxisTextColor: {r: 0, g: 0, b: 0, a: 1}
-  yAxisTextSize: 10
-  yAxisTextOffset: -20
-  xGridWidth: 2
-  xGridColor: {r: 0, g: 0, b: 0, a: 0.6}
-  yGridWidth: 2
-  yGridColor: {r: 0, g: 0, b: 0, a: 0.6}
-  zoomSelectionColor: {r: 0, g: 0.8, b: 1, a: 0.2}
-  zoomSelectionOutlineWidth: 5
-  zoomSelectionOutlineColor: {r: 0, g: 0.8, b: 1, a: 0.6}
-  pointSelectionColor: {r: 1, g: 0.35, b: 0, a: 0.2}
-  pointSelectionOutlineWidth: 5
-  pointSelectionOutlineColor: {r: 1, g: 0.35, b: 0, a: 0.4}
-  ZoomSpeed: 5
-  SmoothZoomSpeed: 20
-  SmoothMoveSpeed: 20
---- !u!114 &1251952511
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1251952509}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e975d233274ec364ba3ce747dfe32094, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  updateGraph: 1
-  canvas: {fileID: 0}
-  activePointIndex: -1
-  fixedPointIndex: -1
-  mouseActionType: 0
-  rectangleType: 0
-  rectangleSelectionType: 0
-  rectangleSelectionPhase: 0
-  pointSelectionType: 0
-  targetZoom: {x: 1, y: 1}
-  targetMoveOffset: {x: 0, y: 0}
---- !u!4 &1251952512
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1251952509}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.448517, y: -13.95886, z: -4.04038}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1984741414
 GameObject:
   m_ObjectHideFlags: 0
@@ -658,4 +540,3 @@ SceneRoots:
   - {fileID: 1984741419}
   - {fileID: 598455288}
   - {fileID: 155552757}
-  - {fileID: 1251952512}

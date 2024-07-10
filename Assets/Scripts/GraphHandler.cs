@@ -63,6 +63,16 @@ public class GraphHandler : MonoBehaviour
 
     private void timeStep(float tS)
     {
+        CreatePoint(new Vector2(2.0f, tS));
+        CreatePoint(new Vector2(1.9f, tS));
+        CreatePoint(new Vector2(1.8f, tS));
+        CreatePoint(new Vector2(1.7f, tS));
+        CreatePoint(new Vector2(1.6f, tS));
+        CreatePoint(new Vector2(1.5f, tS));
+        CreatePoint(new Vector2(1.4f, tS));
+        CreatePoint(new Vector2(1.3f, tS));
+        CreatePoint(new Vector2(1.2f, tS));
+        CreatePoint(new Vector2(1.1f, tS));
         CreatePoint(new Vector2(1.0f, tS));
         CreatePoint(new Vector2(0.9f, tS));
         CreatePoint(new Vector2(0.8f, tS));
@@ -248,9 +258,9 @@ public class GraphHandler : MonoBehaviour
         // ExampleFunction();
         simulation = GameObject.FindGameObjectWithTag("Simulation").GetComponent<SimulationScript>();
         // timeStep(simulation.timeStep);
-        averageDensity(simulation.averageDensity);
-        // cflNumber(simulation.cflConditions);
-        // timeStep(simulation.timeStep);
+        // averageDensity(simulation.averageDensity);
+        cflNumber(simulation.cflConditions);
+        timeStep(simulation.timeStep);
     }
     private void Update()
     {
