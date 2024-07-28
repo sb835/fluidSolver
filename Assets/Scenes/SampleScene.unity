@@ -304,15 +304,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveParticles: 0
   colorParticles: 0
-  withSplitting: 0
   countAvgDensity: 0
   countCFLConditions: 0
   resetParticles: 1
   borderOffset: 7
-  tests: 1
+  tests: 0
+  tP: 0
   averageDensity: []
   cflConditions: []
-  amountParticles: {x: 0, y: 0}
+  amountParticles: {x: 35, y: 35}
   particlePosition: {x: 1.1, y: 1.1}
   particleStartSpacing: 0.2
   speedColor: 4
@@ -324,8 +324,6 @@ MonoBehaviour:
   pressures: []
   forces: []
   nPForces: []
-  predictedPositions: []
-  predictedVelocitys: []
   boundaryPositions: []
   boundaryColors: []
   maxVelocity: {x: 5, y: 5}
